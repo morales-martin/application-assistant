@@ -10,10 +10,95 @@ import UserInformation from "@/components/UserInformation";
 export default function Home() {
   const [step, setStep] = useState(0);
 
+  const [generatedAnswer, setGeneratedAnswer] = useState<string>("");
+  const [generatedCoverLetter, setGeneratedCoverLetter] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [experience, setExperience] = useState<string>("");
+  const [questionToAnswer, setQuestionToAnswer] = useState<string>("");
+
+  let prompt = `You are an experienced candidate filling out a job application. Here is information describing your experience: \\n${
+    experience + (experience[experience.length - 1] === "." ? "" : ".")
+  }\\n Here is information describing the role you are applying to: \\n${
+    description + (description[description.length - 1] === "." ? "" : ".")
+  }\\n`;
+
+  const generateAnswer = async (e: any) => {
+    e.preventDefault();
+    setGeneratedAnswer("");
+
+    let newPrompt =
+      prompt +
+      `To the best of your ability, comprehensibly and succinctly answer the following question: \\n${
+        questionToAnswer +
+        (questionToAnswer[questionToAnswer.length - 1] === "." ? "" : ".")
+      }`;
+
+    try {
+      await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPrompt,
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => setGeneratedAnswer(data.choices[0].text));
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
+  };
+
+  const generateCoverLetter = async (e: any) => {
+    e.preventDefault();
+    setGeneratedCoverLetter("");
+
+    let newPrompt =
+      prompt +
+      `Write a cover letter based on the job description and the listed experience.`;
+
+    try {
+      await fetch("/api/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPrompt,
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => setGeneratedCoverLetter(data.choices[0].text));
+    } catch (error) {
+      console.log(JSON.stringify(error));
+    }
+  };
+
   const formPages = [
-    <UserInformation key="userInformation" />,
-    <GeneratePrompts key="generatePrompts" />,
-    <GenerateCoverLetter key="generateCoverLetter" />,
+    <UserInformation
+      key="userInformation"
+      description={description}
+      setDescription={setDescription}
+      experience={experience}
+      setExperience={setExperience}
+    />,
+    <GeneratePrompts
+      key="generatePrompts"
+      generatedAnswer={generatedAnswer}
+      generateAnswer={generateAnswer}
+      questionToAnswer={questionToAnswer}
+      setQuestionToAnswer={setQuestionToAnswer}
+    />,
+    <GenerateCoverLetter
+      key="generateCoverLetter"
+      generatedCoverLetter={generatedCoverLetter}
+      generateCoverLetter={generateCoverLetter}
+    />,
   ];
 
   return (
@@ -35,8 +120,14 @@ export default function Home() {
                 Generate custom application material in seconds!
               </h3>
             </div>
-            <div className="flex flex-col space-y-4 w-full h-2/3">{formPages[step]}</div>
-            <Navigation step={step} setStep={setStep} numPages={formPages.length}/>
+            <div className="flex flex-col space-y-4 w-full h-2/3 overflow-visible">
+              {formPages[step]}
+            </div>
+            <Navigation
+              step={step}
+              setStep={setStep}
+              numPages={formPages.length}
+            />
           </div>
         </div>
       </main>

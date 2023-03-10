@@ -1,21 +1,61 @@
 import React from "react";
+import CachedIcon from "@mui/icons-material/Cached";
+import SendIcon from "@mui/icons-material/Send";
+import PacmanLoader from "react-spinners/PacmanLoader";
 
 function GenerateCoverLetter({
   generatedCoverLetter,
   generateCoverLetter,
+  loading,
 }: {
   generatedCoverLetter: String;
   generateCoverLetter: any;
+  loading: boolean;
 }) {
   return (
-    <div className="flex flex-col overflow-scroll bg-gray-500 full h-full rounded-lg items-center justify-center text-white">
-      {generatedCoverLetter}
-      <button
-          className="bg-black h-12 text-white rounded-md p-3"
-          onClick={(e) => generateCoverLetter(e)}
-        >
-          Generate
-        </button>
+    <div className="flex flex-col h-full overflow-visible mx-4">
+      {generatedCoverLetter.length ? (
+        <React.Fragment>
+          <h1 className="text-base text-slate-600">Generate cover letter</h1>
+          <div className="flex-1 overflow-scroll">{generatedCoverLetter}</div>
+          <div className="flex justify-end">
+            <span
+              className=" cursor-pointer"
+              onClick={(e) => generateCoverLetter(e)}
+            >
+              <CachedIcon />
+            </span>
+          </div>
+        </React.Fragment>
+      ) : (
+        <div className="flex flex-row items-center justify-center h-full space-x-2">
+          {loading ? (
+            <React.Fragment>
+              <h1 className="text-base text-slate-600">
+                Generating cover letter
+              </h1>
+              <PacmanLoader
+                loading={loading}
+                size={"0.8rem"}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <h1 className="text-base text-slate-600">
+                Generate cover letter
+              </h1>
+              <span
+                className=" cursor-pointer"
+                onClick={(e) => generateCoverLetter(e)}
+              >
+                <SendIcon />
+              </span>
+            </React.Fragment>
+          )}
+        </div>
+      )}
     </div>
   );
 }

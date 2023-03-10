@@ -15,6 +15,7 @@ export default function Home() {
   const [description, setDescription] = useState<string>("");
   const [experience, setExperience] = useState<string>("");
   const [questionToAnswer, setQuestionToAnswer] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   let prompt = `You are an experienced candidate filling out a job application. Here is information describing your experience: \\n${
     experience + (experience[experience.length - 1] === "." ? "" : ".")
@@ -25,6 +26,7 @@ export default function Home() {
   const generateAnswer = async (e: any) => {
     e.preventDefault();
     setGeneratedAnswer("");
+    setLoading(true);
 
     let newPrompt =
       prompt +
@@ -50,10 +52,13 @@ export default function Home() {
     } catch (error) {
       console.log(JSON.stringify(error));
     }
+
+    setLoading(false);
   };
 
   const generateCoverLetter = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     setGeneratedCoverLetter("");
 
     let newPrompt =
@@ -77,6 +82,8 @@ export default function Home() {
     } catch (error) {
       console.log(JSON.stringify(error));
     }
+
+    setLoading(false);
   };
 
   const formPages = [
@@ -86,18 +93,21 @@ export default function Home() {
       setDescription={setDescription}
       experience={experience}
       setExperience={setExperience}
-    />,
-    <GeneratePrompts
+      />,
+      <GeneratePrompts
       key="generatePrompts"
       generatedAnswer={generatedAnswer}
       generateAnswer={generateAnswer}
       questionToAnswer={questionToAnswer}
       setQuestionToAnswer={setQuestionToAnswer}
-    />,
-    <GenerateCoverLetter
+      setGeneratedAnswer={setGeneratedAnswer}
+      loading={loading}
+      />,
+      <GenerateCoverLetter
       key="generateCoverLetter"
       generatedCoverLetter={generatedCoverLetter}
       generateCoverLetter={generateCoverLetter}
+      loading={loading}
     />,
   ];
 
@@ -111,7 +121,7 @@ export default function Home() {
       </Head>
       <main>
         <div className="flex flex-col items-center justify-center h-screen space-y-4">
-          <div className="flex flex-col w-3/5 h-3/5 max-w-lg items-center space-y-4">
+          <div className="flex flex-col w-full h-3/5 max-w-4xl items-center space-y-4">
             <div id="header">
               <h1 className="text-3xl font-bold text-center">
                 Job application assistant
@@ -120,7 +130,7 @@ export default function Home() {
                 Generate custom application material in seconds!
               </h3>
             </div>
-            <div className="flex flex-col space-y-4 w-full h-2/3 overflow-visible">
+            <div className="flex flex-col space-x-4 sm:space-y-4 w-full h-2/3 overflow-visible">
               {formPages[step]}
             </div>
             <Navigation

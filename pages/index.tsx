@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import styles from "@/styles/Home.module.css";
 import Navigation from "@/components/Navigation";
 import GenerateCoverLetter from "@/components/GenerateCoverLetter";
 import GeneratePrompts from "@/components/GeneratePrompts";
@@ -17,6 +15,7 @@ export default function Home() {
   const [experience, setExperience] = useState<string>("");
   const [questionToAnswer, setQuestionToAnswer] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [disable, setDisable] = useState<boolean>(true);
 
   let prompt = `You are an experienced candidate filling out a job application. Here is information describing your experience: \\n${
     experience + (experience[experience.length - 1] === "." ? "" : ".")
@@ -94,6 +93,7 @@ export default function Home() {
       setDescription={setDescription}
       experience={experience}
       setExperience={setExperience}
+      setDisable={setDisable}
     />,
     <GeneratePrompts
       key="generatePrompts"
@@ -130,7 +130,7 @@ export default function Home() {
           <div className="flex flex-col w-full h-3/5 max-w-4xl items-center space-y-4">
             <div id="header">
               <h1 className="text-3xl font-bold text-center">
-                Job application assistant
+                AI Application Assistant
               </h1>
               <h3 className="text-sm text-center">
                 Generate custom application material in seconds!
@@ -143,6 +143,7 @@ export default function Home() {
               step={step}
               setStep={setStep}
               numPages={formPages.length}
+              disable={disable}
             />
           </div>
         </div>

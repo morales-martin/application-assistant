@@ -2,6 +2,7 @@ import React from "react";
 import CachedIcon from "@mui/icons-material/Cached";
 import SendIcon from "@mui/icons-material/Send";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import { toast } from "react-hot-toast";
 
 function GeneratePrompts({
   generatedAnswer,
@@ -27,13 +28,25 @@ function GeneratePrompts({
           setQuestionToAnswer(e.target.value);
           setGeneratedAnswer("");
         }}
-        className="flex-1 p-4"
+        className="flex-1 p-4 transition duration-300 ease-in-out"
         placeholder="e.g. What is your favorite language? Why choose Google?"
       ></textarea>
 
+
+
       {generatedAnswer.length ? (
         <React.Fragment>
-          <div className="flex-1 overflow-scroll">{generatedAnswer}</div>
+          <div
+            className="flex-1 overflow-scroll"
+            onClick={() => {
+              navigator.clipboard.writeText(generatedAnswer);
+              toast("Prompt copied to clipboard", {
+                icon: "✂️",
+              });
+            }}
+          >
+            {generatedAnswer}
+          </div>
           <div className="flex justify-end">
             {loading ? (
               <PacmanLoader

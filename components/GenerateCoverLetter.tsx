@@ -2,13 +2,14 @@ import React from "react";
 import CachedIcon from "@mui/icons-material/Cached";
 import SendIcon from "@mui/icons-material/Send";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import { toast } from "react-hot-toast";
 
 function GenerateCoverLetter({
   generatedCoverLetter,
   generateCoverLetter,
   loading,
 }: {
-  generatedCoverLetter: String;
+  generatedCoverLetter: string;
   generateCoverLetter: any;
   loading: boolean;
 }) {
@@ -17,7 +18,17 @@ function GenerateCoverLetter({
       {generatedCoverLetter.length ? (
         <React.Fragment>
           <h1 className="text-base text-slate-600">Generate cover letter</h1>
-          <div className="flex-1 overflow-scroll">{generatedCoverLetter}</div>
+          <div
+            className="flex-1 overflow-scroll"
+            onClick={() => {
+              navigator.clipboard.writeText(generatedCoverLetter);
+              toast("Copied to clipboard", {
+                icon: "✂️",
+              });
+            }}
+          >
+            {generatedCoverLetter}
+          </div>
           <div className="flex justify-end">
             <span
               className=" cursor-pointer"

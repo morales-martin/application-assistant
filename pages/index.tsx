@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import GenerateCoverLetter from "@/components/GenerateCoverLetter";
 import GeneratePrompts from "@/components/GeneratePrompts";
 import UserInformation from "@/components/UserInformation";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const [step, setStep] = useState(0);
@@ -93,8 +94,8 @@ export default function Home() {
       setDescription={setDescription}
       experience={experience}
       setExperience={setExperience}
-      />,
-      <GeneratePrompts
+    />,
+    <GeneratePrompts
       key="generatePrompts"
       generatedAnswer={generatedAnswer}
       generateAnswer={generateAnswer}
@@ -102,8 +103,8 @@ export default function Home() {
       setQuestionToAnswer={setQuestionToAnswer}
       setGeneratedAnswer={setGeneratedAnswer}
       loading={loading}
-      />,
-      <GenerateCoverLetter
+    />,
+    <GenerateCoverLetter
       key="generateCoverLetter"
       generatedCoverLetter={generatedCoverLetter}
       generateCoverLetter={generateCoverLetter}
@@ -120,6 +121,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{ duration: 2000 }}
+        />
         <div className="flex flex-col items-center justify-center h-screen space-y-4">
           <div className="flex flex-col w-full h-3/5 max-w-4xl items-center space-y-4">
             <div id="header">
